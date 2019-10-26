@@ -11,12 +11,14 @@ const signupPage = (req, res) => {
 };
 
 const logout = (req, res) => {
+  req.session.destroy();
   res.redirect('/');
 };
 
 const login = (req, res) => {
   const username = `${req.body.username}`;
   const password = `${req.body.pass}`;
+
   if (!username || !password) {
     return res.status(400).json({ error: 'All fields are required' });
   }
@@ -24,6 +26,9 @@ const login = (req, res) => {
     if (err || !account) {
       return res.status(401).json({ error: 'incorrect username or password' });
     }
+    const reqC = req;
+    reqC.session.account = Account.AccountModel.toAPI(account);
+
     return res.json({ redirect: '/maker' });
   });
 };
@@ -49,6 +54,8 @@ const signup = (req, res) => {
     const newAccount = new Account.AccountModel(accountData);
     const savePromise = newAccount.save();
     savePromise.then(() => {
+      const reqC = req;
+      reqC.session.account = Account.AccountModel.toAPI(newAccount);
       res.json({ redirect: '/maker' });
     });
     savePromise.catch((err) => {
