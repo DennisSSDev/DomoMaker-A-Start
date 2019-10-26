@@ -54,7 +54,7 @@ const DomoForm = (props) => {
 const DeleteDomoForm = (props) => {
     return (
         <div>
-            <h1>Delete Domos:</h1>
+            <h1>Delete All Domos with Name:</h1>
             <form id="delDomoForm"
                 name="delDomoForm"
                 onSubmit={deleteDomo}

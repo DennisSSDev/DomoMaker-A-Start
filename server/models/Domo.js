@@ -55,6 +55,13 @@ DomoSchema.statics.findByOwner = (ownerId, callback) => {
   return DomoModel.find(search).select('name age level').exec(callback);
 };
 
+DomoSchema.statics.findByName = (name, callback) => {
+  const search = {
+    name,
+  };
+  return DomoModel.find(search).exec(callback);
+};
+
 DomoSchema.statics.removeAllByName = (domoName, callback) => {
   const search = {
     name: domoName,

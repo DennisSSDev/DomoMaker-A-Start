@@ -5,7 +5,6 @@ const Domo = models.Domo;
 const makerPage = (req, res) => {
   Domo.DomoModel.findByOwner(req.session.account._id, (err, docs) => {
     if (err) {
-      console.log(err);
       return res.status(400).json({ error: 'an error occured' });
     }
     return res.render('app', { csrfToken: req.csrfToken(), domos: docs });
@@ -37,7 +36,6 @@ const makeDomo = (req, res) => {
   });
 
   domoPromise.catch((err) => {
-    console.log(err);
     if (err.code === 11000) {
       return res.status(400).json({ error: 'Domo already exists' });
     }
@@ -50,7 +48,6 @@ const makeDomo = (req, res) => {
 const getDomos = (req, res) => {
   Domo.DomoModel.findByOwner(req.session.account._id, (err, docs) => {
     if (err) {
-      console.log(err);
       return res.status(400).json({ error: 'an error occured' });
     }
     return res.json({ domos: docs });
@@ -63,12 +60,17 @@ const deleteDomo = (req, res) => {
     res.status(400).json({ error: 'Name is required' });
     return;
   }
-  Domo.DomoModel.removeAllByName(name, (err) => {
-    if (err) {
-      console.log(err);
-      return res.status(400).json({ error: 'an error occured' });
+  Domo.DomoModel.findByName(name, (err, docs) => {
+    if (err || docs.length === 0) {
+      res.status(400).json({ error: 'no such Domo exists' });
+      return;
     }
-    return getDomos(req, res);
+    Domo.DomoModel.removeAllByName(name, (error) => {
+      if (error) {
+        return res.status(400).json({ error: 'an error occured' });
+      }
+      return getDomos(req, res);
+    });
   });
 };
 

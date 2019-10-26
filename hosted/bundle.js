@@ -78,7 +78,7 @@ var DeleteDomoForm = function DeleteDomoForm(props) {
         React.createElement(
             'h1',
             null,
-            'Delete Domos:'
+            'Delete All Domos with Name:'
         ),
         React.createElement(
             'form',
