@@ -15,13 +15,16 @@ const makerPage = (req, res) => {
 const makeDomo = (req, res) => {
   const name = req.body.name;
   const age = req.body.age;
+  const level = req.body.level;
 
-  if (!name || !age) {
-    return res.status(400).json({ error: 'Both Name and Age are required' });
+  if (!name || !age || !level) {
+    return res.status(400).json({ error: 'Name, Age and Level are required' });
   }
+
   const domoData = {
     name,
     age,
+    level,
     owner: req.session.account._id,
   };
 
@@ -54,6 +57,22 @@ const getDomos = (req, res) => {
   });
 };
 
+const deleteDomo = (req, res) => {
+  const name = `${req.body.name}`;
+  if (!name) {
+    res.status(400).json({ error: 'Name is required' });
+    return;
+  }
+  Domo.DomoModel.removeAllByName(name, (err) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'an error occured' });
+    }
+    return getDomos(req, res);
+  });
+};
+
 module.exports.makerPage = makerPage;
 module.exports.makeDomo = makeDomo;
 module.exports.getDomos = getDomos;
+module.exports.deleteDomo = deleteDomo;
