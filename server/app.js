@@ -10,6 +10,7 @@ const expsession = require('express-session');
 const RedisStore = require('connect-redis')(expsession);
 const url = require('url');
 const csrf = require('csurf');
+const cors = require('cors');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
@@ -41,6 +42,7 @@ const router = require('./router');
 const app = express();
 
 app.use('/assets', express.static(path.resolve(`${__dirname}/../hosted/`)));
+app.use(cors());
 app.use(favicon(`${__dirname}/../hosted/img/favicon.png`));
 app.disable('x-powered-by');
 app.use(compression());
